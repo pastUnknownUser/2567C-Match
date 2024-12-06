@@ -1,4 +1,5 @@
 #include "main.h" // IWYU pragma: keep
+#include "pros/rtos.hpp"
 
 /////
 // For installation, upgrading, documentations, and tutorials, check out our website!
@@ -8,14 +9,17 @@
 void FWD(float distance, int speed) {
   chassis.pid_drive_set(distance, speed, true);
   chassis.pid_wait();
+  pros::delay(75);
 }
 void REV(float distance, int speed) {
   chassis.pid_drive_set(-distance, speed, true);
   chassis.pid_wait();
+  pros::delay(75);
 }
 void turn(float heading, int speed) {
   chassis.pid_turn_set(heading, speed, true);
   chassis.pid_wait();
+  pros::delay(75);
 }
 
 
@@ -38,7 +42,7 @@ const int SWING_SPEED = 90;
 ///
 void default_constants() {
   chassis.pid_heading_constants_set(11, 0, 20);
-  chassis.pid_drive_constants_set(20, 0, 100);
+  chassis.pid_drive_constants_set(11, 0, 100);
   chassis.pid_turn_constants_set(3, 0.05, 20, 15);
   chassis.pid_swing_constants_set(6, 0, 65);
 
@@ -305,54 +309,89 @@ void skills() {
 
 void skills2() {
   //pros::Task heading(live_heading);
+  /*
+  basket.set_value(true);
+  trapdoor.set_value(true);
+  pros::delay(100);
+  arm.move_relative(770, 100);
+  pros::delay(1000);
+  chassis.pid_drive_set(8.7, 70, true);
+  chassis.pid_wait();
+  arm.move_relative(-500, 100);
+  pros::delay(500);
+  chassis.pid_drive_set(-9, 70, true);
+  chassis.pid_wait();
+  arm.move_relative(-470, 100);
+  chassis.pid_turn_set(80_deg, 49, true);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-18, 70, true);
+  chassis.pid_wait();
+  mogoClamp.set_value(true);
+  chassis.pid_turn_set(195_deg, 49, true);
+  chassis.pid_wait();
+  intake.move_voltage(-12000);
+  chassis.pid_drive_set(22, 70, true);
+  chassis.pid_wait();
+  chassis.pid_turn_set(230_deg, 49, true);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-42, 70, true);
+  chassis.pid_wait();
+  chassis.pid_turn_set(35_deg, 49, true);
+  chassis.pid_wait();
+  chassis.pid_drive_set(25, 70, true);
+  chassis.pid_wait();
+  */
 
   basket.set_value(true);
   trapdoor.set_value(true);
   pros::delay(100);
   arm.move_relative(770, 100);
-  pros::delay(100);
   pros::delay(1000);
-  FWD(9, 70);
-  arm.move_relative(-300, 100);
+  chassis.pid_drive_set(8.7, 70, true);
+  chassis.pid_wait();
+  arm.move_relative(-500, 100);
   pros::delay(500);
-  REV(9, 70);
+  chassis.pid_drive_set(-9, 70, true);
+  chassis.pid_wait();
   arm.move_relative(-470, 100);
-  turn(80, 49);
-  REV(18, 70);
+  chassis.pid_turn_set(80, 49, true);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-18, 70, true);
+  chassis.pid_wait();
   mogoClamp.set_value(true);
-  turn(195, 49);
+  chassis.pid_turn_set(195, 49, true);
+  chassis.pid_wait();
   intake.move_voltage(-12000);
-  FWD(22, 70);
-  turn(230, 49);
-  FWD(42, 70);
-  turn(35, 49);
-  FWD(25, 70);
-
-
+  chassis.pid_drive_set(22,70, true);
+  chassis.pid_wait();
+  chassis.pid_turn_set(230, 49, true);
+  chassis.pid_wait();
+  chassis.pid_drive_set(42, 70, true);
+  chassis.pid_wait();
+  chassis.pid_turn_set(20, 49, true);
+  chassis.pid_wait();
+  chassis.pid_drive_set(25, 70, true);
+  chassis.pid_wait();
   
-  
 
-  
 }
 
 ///
 // Combining Turn + Drive
 ///
-void drive_and_turn() {
-  chassis.pid_drive_set(24_in, DRIVE_SPEED, true);
+void test() {
+  chassis.pid_drive_set(24_in, 100, true);
   chassis.pid_wait();
 
   chassis.pid_turn_set(45_deg, TURN_SPEED);
   chassis.pid_wait();
 
-  chassis.pid_turn_set(-45_deg, TURN_SPEED);
+  chassis.pid_turn_set(0, TURN_SPEED, true);
   chassis.pid_wait();
 
-  chassis.pid_turn_set(0_deg, TURN_SPEED);
+  chassis.pid_drive_set(-24_in, 100, true);
   chassis.pid_wait();
 
-  chassis.pid_drive_set(-24_in, DRIVE_SPEED, true);
-  chassis.pid_wait();
 }
 
 ///

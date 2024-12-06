@@ -49,7 +49,7 @@ void initialize() {
       Auton("red right wp", red_right_win_point),
       Auton("SKILLS", skills),
       Auton("SKILLS 2", skills2),
-      Auton("Drive and Turn\n\nSlow down during drive.", wait_until_change_speed),
+      Auton("Drive and Turn\n\nSlow down during drive.", test),
       Auton("Swing Example\n\nSwing in an 'S' curve", swing_example),
       Auton("Combine all 3 movements", combining_movements),
       Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example),
