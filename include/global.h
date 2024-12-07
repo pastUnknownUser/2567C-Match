@@ -1,3 +1,5 @@
+#pragma once
+
 #include "api.h" // IWYU pragma: keep
 #include "pros/adi.hpp"
 #include "pros/imu.hpp"

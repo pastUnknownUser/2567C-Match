@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "EZ-Template-Example",
+    "project_name": "2567C-Match",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -421,8 +421,8 @@
       }
     },
     "upload_options": {
-      "description": "making code ez",
-      "slot": 8,
+      "description": "2567C Program",
+      "slot": 1,
       "after": "run"
     },
     "use_early_access": false

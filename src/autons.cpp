@@ -1,3 +1,5 @@
+#include "autons.hpp"
+#include "liblvgl/core/lv_obj_class.h" // IWYU pragma: keep
 #include "main.h" // IWYU pragma: keep
 #include "pros/rtos.hpp"
 
@@ -9,17 +11,14 @@
 void FWD(float distance, int speed) {
   chassis.pid_drive_set(distance, speed, true);
   chassis.pid_wait();
-  pros::delay(75);
 }
 void REV(float distance, int speed) {
   chassis.pid_drive_set(-distance, speed, true);
   chassis.pid_wait();
-  pros::delay(75);
 }
 void turn(float heading, int speed) {
-  chassis.pid_turn_set(heading, speed, true);
+  chassis.pid_turn_set(heading, speed, false);
   chassis.pid_wait();
-  pros::delay(75);
 }
 
 
@@ -57,74 +56,53 @@ void default_constants() {
   chassis.slew_drive_constants_set(7_in, 80);
 }
 
-void red_right_win_point() {
-  //pros::Task heading(live_heading);
-
-  arm.move_relative(360, 100);
-  basket.set_value(true);
-  REV(20, 100);
+void red_right_rush() {
+  //line up with line of tabs, brake calling me
+  arm.move_relative(500, 100);
+  REV(32.5, 70);
+  turn(-29.2, 49);
+  REV(17, 49);
   mogoClamp.set_value(true);
   pros::delay(100);
-  FWD(5, 127);
-  REV(5, 127);
-  turn(-40 ,100);
+  turn(10, 49);
   intake.move_voltage(-12000);
-  
-  FWD(22, 100);
-
-  /*
-  intakeRelease.set_value(false);
-  pros::delay(300);
-  REV(22, 100);
-  turn(180, 100);
+  pros::delay(500);
+  FWD(18, 70);
+  REV(10, 70);
+  pros::delay(1000);
   mogoClamp.set_value(false);
-  REV(5, 127);
-  FWD(5, 127);
-  pros::delay(250);
-  turn(75, 100);
-  REV(28, 100);
-  mogoClamp.set_value(false);
+  FWD(9.5, 70);
+  turn(-90, 49);  
+  REV(15.5, 70);
+  mogoClamp.set_value(true);
   pros::delay(100);
-  turn(-5, 100);
-  FWD(12.5, 100);
-  turn(95, 100);
-  FWD(45, 100);
-  */
-
+  turn(47, 49);
 }
 
-void blue_right_win_point() {
+void red_right_win_point() {
+  
   trapdoor.set_value(true);
   pros::delay(100);
-  arm.move_relative(720, 100);
-  pros::delay(100);
+  arm.move_relative(770, 100);
   basket.set_value(true);
   pros::delay(1000);
-  FWD(9, 100);
-  arm.move_relative(-300, 100);
+  FWD(11, 90);
+  arm.move_relative(-500, 100);
   pros::delay(500);
-  REV(9, 100);
-  turn(-25,100);
-  REV(8, 100);
-  turn(-35, 100);
-  REV(27, 100);
+  REV(37, 90);
+  arm.move_relative(-440, 100);
   mogoClamp.set_value(true);
-  turn(-165, 100);
+  turn(-125, 100);
   intake.move_voltage(-12000);
-  turn(-150, 100);
-  FWD(28, 100);
-  REV(3, 100);
-  turn(-240, 100);
-  FWD(14, 100);
-  REV(14, 100);
-  turn(-218, 100);
-  FWD(15, 100);
-  REV(14, 100);
-  turn(45, 100);
-  arm.move_relative(800, 100);
-  FWD(40, 100);
-  
-
+  FWD(24.5, 90);
+  arm.move_relative(500, 100);
+  turn(36, 100);
+  intakeRelease.set_value(true);
+  FWD(44,90 );
+  intakeRelease.set_value(false);
+  REV(20, 90);
+  turn(95, 100);
+  FWD(11, 90);
 
 }
 
@@ -133,246 +111,193 @@ void red_left_win_point() {
 
   trapdoor.set_value(true);
   pros::delay(100);
-  arm.move_relative(720, 100);
-  pros::delay(100);
+  arm.move_relative(770, 100);
   basket.set_value(true);
   pros::delay(1000);
-  FWD(9, 100);
-  arm.move_relative(-300, 100);
+  FWD(11.5, 100);
+  arm.move_relative(-500, 100);
   pros::delay(500);
-  REV(9, 100);
-  turn(25,100);
-  REV(8, 100);
-  turn(35, 100);
-  REV(27, 100);
+  REV(37, 65);
   mogoClamp.set_value(true);
-  turn(165, 100);
+  turn(125, 100);
   intake.move_voltage(-12000);
-  turn(150, 100);
-  FWD(28, 100);
-  REV(3, 100);
-  turn(240, 100);
-  FWD(14, 100);
-  REV(14, 100);
-  turn(218, 100);
-  FWD(15, 100);
-  REV(14, 100);
-  turn(-45, 100);
-  arm.move_relative(800, 100);
-  FWD(40, 100);
-  
+  FWD(23, 100);
+  turn(212, 100);
+  FWD(15.5, 100);
+  pros::delay( 500);
+  REV(15.5, 100);
+  turn(191, 100);
+  FWD(16.5, 100);
+  pros::delay( 500);
+  REV(16.5, 100);
+  intakeRelease.set_value(true);
+  turn(323, 100);
+  FWD(44, 100);
+  pros::delay(500);
+  intakeRelease.set_value(false);
+  REV(10, 100);
+  pros::delay(500);
+  turn(245, 100);
+  FWD(19, 100);
 
+}
+
+void blue_right_win_point() {
+  
+  trapdoor.set_value(true);
+  pros::delay(100);
+  arm.move_relative(770, 100);
+  basket.set_value(true);
+  pros::delay(1000);
+  FWD(11.5, 100);
+  arm.move_relative(-500, 100);
+  pros::delay(500);
+  REV(37, 65);
+  mogoClamp.set_value(true);
+  turn(-125, 100);
+  intake.move_voltage(-12000);
+  FWD(23, 100);
+  turn(-212, 100);
+  FWD(15.5, 100);
+  pros::delay( 500);
+  REV(15.5, 100);
+  turn(-191, 100);
+  FWD(16.5, 100);
+  pros::delay( 500);
+  REV(16.5, 100);
+  intakeRelease.set_value(true);
+  turn(-323, 100);
+  FWD(44, 100);
+  pros::delay(500);
+  intakeRelease.set_value(false);
+  REV(10, 100);
+  pros::delay(500);
+  turn(-245, 100);
+  FWD(19, 100);
+  
 }
 
 void blue_left_win_point() {
-  /*
-  //scoring alliance
-  pros::delay(500);
-  arm.move_relative(650, 100);
-  pros::delay(500);
-  basket.set_value(true);
-  pros::delay(500);
-  chassis.pid_drive_set(12_in, 50, true);
-  chassis.pid_wait();
-  arm.move_relative(-350, 100);
-  chassis.pid_drive_set(-8_in, 50, true);
-  chassis.pid_wait();
-  basket.set_value(false);
-  chassis.pid_turn_set(-20, 70, true);
-  chassis.pid_wait();
-  //clamping mogo goal
-  chassis.pid_drive_set(-26_in, 50, true);
-  chassis.pid_wait();
-  mogoClamp.set_value(true);
-  pros::delay(250);
- */
-  arm.move_relative(360, 100);
-  basket.set_value(true);
-  REV(20, 100);
-  mogoClamp.set_value(true);
+
+  trapdoor.set_value(true);
   pros::delay(100);
-  FWD(5, 127);
-  REV(5, 127);
-  turn(-87.5, 100);
+  arm.move_relative(770, 100);
+  basket.set_value(true);
+  pros::delay(1000);
+  FWD(11, 90);
+  arm.move_relative(-500, 100);
+  pros::delay(500);
+  REV(37, 90);
+  arm.move_relative(-440, 100);
+  mogoClamp.set_value(true);
+  turn(125, 100);
   intake.move_voltage(-12000);
+  FWD(24.5, 90);
+  arm.move_relative(500, 100);
+  turn(-36, 100);
   intakeRelease.set_value(true);
-  FWD(22, 100);
+  FWD(44, 90);
   intakeRelease.set_value(false);
-  pros::delay(300);
-  REV(-22, 100);
-  turn(180, 100);
-  mogoClamp.set_value(false);
-  REV(5, 127);
-  FWD(5, 127);
-  pros::delay(250);
-  turn(-75, 100);
-  REV(28, 100);
-  mogoClamp.set_value(false);
-  pros::delay(100);
-  turn(5, 100);
-  FWD(12.5, 100);
+  REV(20, 90);
   turn(-95, 100);
-  FWD(45, 100);
+  FWD(11, 90);
+
 }
 
 void skills() {
-  //pros::Task heading(live_heading);
-
-  arm.move_relative(360, 100);
-  chassis.pid_drive_set(-6_in, 100, true);
-  chassis.pid_wait();
-  mogoClamp.set_value(true); //1st mogo
-  pros::delay(500);
-  chassis.pid_drive_set(1_in, 100, false);
-  chassis.pid_wait();
-  chassis.pid_drive_set(-1_in, 100, false);
-  chassis.pid_wait();
-  intake.move_velocity(-12000);
-  pros::delay(750);
-  chassis.pid_turn_set(155, 100, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(24_in, 100, true); //1st ring
-  chassis.pid_wait();
-  chassis.pid_turn_set(215, 100, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(22.5_in,  65,true); //2nd ring
-  chassis.pid_wait();
-  chassis.pid_turn_set(308, 100, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(18_in, 100, true); //3rd ring
-  chassis.pid_wait();
-  chassis.pid_turn_set(262, 100, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(9_in,100, true); //4th ring
-  chassis.pid_wait();
-  chassis.pid_turn_set(336, 100, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(16_in, 100, true); //5th ring
-  chassis.pid_wait();
-  chassis.pid_drive_set(-20_in, 100, true);
-  chassis.pid_wait();
-  chassis.pid_turn_set(128, 80, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(-22_in, 100, true);
-  chassis.pid_wait();
-  mogoClamp.set_value(false); //mogo corner
-  pros::delay(500);
-  chassis.pid_drive_set(15_in ,100, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(-15_in, 100, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(12_in, 100, false);
-  chassis.pid_wait();
-  chassis.pid_turn_set(235.45, 50, true); //drive across
-  chassis.pid_wait();
-  
-  chassis.pid_drive_set(-77, 85, true);
-  chassis.pid_wait();
-  mogoClamp.set_value(true); //2nd mogo
+  //alliance stake
+  basket.set_value(true);
+  trapdoor.set_value(true);
   pros::delay(100);
-  chassis.pid_turn_set(146, 70, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(21_in, 100, true); //1st ring
-  chassis.pid_wait();
-  chassis.pid_turn_set(63, 80, true);
-  chassis.pid_wait();
-  arm.move_relative(-50, 100);
-  pros::delay(150);
-  chassis.pid_drive_set(28_in, 80, true);
-  chassis.pid_wait();
-  chassis.pid_turn_set(335, 100, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(20_in, 100, true);
-  chassis.pid_wait();
-  pros::delay(500);
-  chassis.pid_drive_set(13_in, 100, true);
-  chassis.pid_wait();
-  chassis.pid_turn_set(60, 100, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(13_in, 100, true);
-  chassis.pid_wait();
-  chassis.pid_turn_set(176, 100, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(-21_in, 100, true);
-  chassis.pid_wait();
+  arm.move_relative(770, 100);
+  pros::delay(1000);
+  FWD(10, 100);
+  arm.move_relative(-500, 100);
+  pros::delay(100);
+  REV(9, 100);
+  //1st goal
+  turn(80, 100);
+  REV(18, 80);
+  mogoClamp.set_value(true);
+  turn(195, 100);
+  intake.move_voltage(-12000);
+  FWD(22, 75);
+  turn(230, 100);
+  FWD(42, 75);
+  turn(20, 100);
+  FWD(24, 75);
+  turn(0, 100);
+  FWD(23, 75);
+  pros::delay(300);
+  FWD(8, 75);
+  pros::delay(700);
+  REV(15, 75);
+  turn(-62, 100);
+  pros::delay(300);
+  FWD(11, 75);
+  REV(12, 100);
+  turn(138, 100);
+  REV(17, 100);
+  mogoClamp.set_value(false);
+  FWD(6, 75);
+  REV(10, 100);
+  FWD(10, 75);
+  //2nd goal
+  turn(268, 100);
+  REV(73,70);
+  mogoClamp.set_value(true);
+  basket.set_value(false);
+  turn(166, 100);
+  FWD(22, 75);
+  turn(122, 100);
+  FWD(42, 75);
+  turn(-15, 100);
+  FWD(24.5, 75);
+  turn(0, 100);
+  FWD(28, 75);
+  pros::delay(300);
+  FWD(14.5, 75);
+  pros::delay(300);
+  REV(18, 80);
+  turn(55, 100);
+  pros::delay(300);
+  FWD(13, 75);
+  pros::delay(100);
+  REV(13, 75);
+  turn(-145, 100);
+  REV(20, 100);
   mogoClamp.set_value(false);
   pros::delay(100);
-  chassis.pid_drive_set(13_in, 100, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(-13_in, 100, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(13_in, 100, true);
-  chassis.pid_wait();
-  
-  
-}
-
-void skills2() {
-  //pros::Task heading(live_heading);
-  /*
+  intake.move_voltage(12000);
+  FWD(8, 100);
+  REV(15, 100);
+  FWD(15, 100);
+  //3rd goal
+  turn(-165, 100);
+  FWD(88, 100);
   basket.set_value(true);
-  trapdoor.set_value(true);
+  turn(-140, 100);
+  FWD(33, 100);
+  turn(-251, 100);
+  FWD(60, 100);
+  REV(15, 100);
+  FWD(20, 100);
+  REV(20, 100);
+  //4th goal
+  turn( -90, 100);
+  FWD(50, 100);
+  turn(-115, 100);
+  FWD(70, 100);
+  REV(25, 100);
+  //hang
+  turn(34, 100);
+  basket.set_value(false);
   pros::delay(100);
   arm.move_relative(770, 100);
-  pros::delay(1000);
-  chassis.pid_drive_set(8.7, 70, true);
-  chassis.pid_wait();
-  arm.move_relative(-500, 100);
-  pros::delay(500);
-  chassis.pid_drive_set(-9, 70, true);
-  chassis.pid_wait();
-  arm.move_relative(-470, 100);
-  chassis.pid_turn_set(80_deg, 49, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(-18, 70, true);
-  chassis.pid_wait();
-  mogoClamp.set_value(true);
-  chassis.pid_turn_set(195_deg, 49, true);
-  chassis.pid_wait();
-  intake.move_voltage(-12000);
-  chassis.pid_drive_set(22, 70, true);
-  chassis.pid_wait();
-  chassis.pid_turn_set(230_deg, 49, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(-42, 70, true);
-  chassis.pid_wait();
-  chassis.pid_turn_set(35_deg, 49, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(25, 70, true);
-  chassis.pid_wait();
-  */
-
-  basket.set_value(true);
-  trapdoor.set_value(true);
-  pros::delay(100);
-  arm.move_relative(770, 100);
-  pros::delay(1000);
-  chassis.pid_drive_set(8.7, 70, true);
-  chassis.pid_wait();
-  arm.move_relative(-500, 100);
-  pros::delay(500);
-  chassis.pid_drive_set(-9, 70, true);
-  chassis.pid_wait();
-  arm.move_relative(-470, 100);
-  chassis.pid_turn_set(80, 49, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(-18, 70, true);
-  chassis.pid_wait();
-  mogoClamp.set_value(true);
-  chassis.pid_turn_set(195, 49, true);
-  chassis.pid_wait();
-  intake.move_voltage(-12000);
-  chassis.pid_drive_set(22,70, true);
-  chassis.pid_wait();
-  chassis.pid_turn_set(230, 49, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(42, 70, true);
-  chassis.pid_wait();
-  chassis.pid_turn_set(20, 49, true);
-  chassis.pid_wait();
-  chassis.pid_drive_set(25, 70, true);
-  chassis.pid_wait();
-  
+  sweepArm.set_value(true);
+  FWD(55, 100);
+  REV(10, 100);
+//this code sucks and i hate this i just want to rebuild and qualify for worlds 
 
 }
 

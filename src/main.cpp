@@ -46,13 +46,13 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
+      Auton("red right rush", red_right_rush),
       Auton("red right wp", red_right_win_point),
+      Auton("red left wp", red_left_win_point),
+      Auton("blue right wp", blue_right_win_point),
+      Auton("blue left wp", blue_left_win_point),
       Auton("SKILLS", skills),
-      Auton("SKILLS 2", skills2),
-      Auton("Drive and Turn\n\nSlow down during drive.", test),
-      Auton("Swing Example\n\nSwing in an 'S' curve", swing_example),
-      Auton("Combine all 3 movements", combining_movements),
-      Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example),
+     
   });
 
   // Initialize chassis and auton selector
