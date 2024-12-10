@@ -58,25 +58,29 @@ void default_constants() {
 
 void red_right_rush() {
   //line up with line of tabs, brake calling me
-  arm.move_relative(500, 100);
-  REV(32.5, 70);
-  turn(-29.2, 49);
-  REV(17, 49);
+  arm.move_relative(350, 100);
+  REV(32.5, 110);
+  turn(-29.2, 110);
+  REV(15, 110);
   mogoClamp.set_value(true);
   pros::delay(100);
-  turn(10, 49);
+  turn(10, 100);
   intake.move_voltage(-12000);
   pros::delay(500);
-  FWD(18, 70);
-  REV(10, 70);
-  pros::delay(1000);
+  FWD(15, 110);
+  pros::delay(150);
+  REV(5, 100);
+  intake.move_voltage(12000);
+  pros::delay(500);
   mogoClamp.set_value(false);
-  FWD(9.5, 70);
-  turn(-90, 49);  
-  REV(15.5, 70);
+  REV(6, 110);
+  FWD(6, 110);
+  FWD(7.5, 110);
+  turn(-90, 100);  
+  REV(16, 110);
   mogoClamp.set_value(true);
   pros::delay(100);
-  turn(47, 49);
+  turn(47, 100);
 }
 
 void red_right_win_point() {

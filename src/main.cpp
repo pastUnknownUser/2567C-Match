@@ -1,4 +1,5 @@
 #include "main.h"
+#include "EZ-Template/auton_selector.hpp"
 #include "EZ-Template/util.hpp"
 #include "autons.hpp"
 #include "pros/misc.h"
@@ -215,7 +216,6 @@ void opcontrol() {
         intakeRelease.set_value(false);
       }
     }
-    
     
 
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
