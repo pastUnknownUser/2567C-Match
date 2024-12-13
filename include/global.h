@@ -15,4 +15,3 @@ extern pros::adi::DigitalOut sweepArm;
 extern pros::Motor arm;
 extern pros::adi::DigitalOut trapdoor;
 extern pros::Optical intakeStopper;
-extern pros::IMU Imu;

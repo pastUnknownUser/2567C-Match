@@ -1,4 +1,5 @@
 #include "autons.hpp"
+#include "global.h"
 #include "liblvgl/core/lv_obj_class.h" // IWYU pragma: keep
 #include "main.h" // IWYU pragma: keep
 #include "pros/rtos.hpp"
@@ -21,7 +22,6 @@ void turn(float heading, int speed) {
   chassis.pid_wait();
 }
 
-
 void ColorSensor() {
   intakeStopper.set_led_pwm(100);
   if (intakeStopper.get_hue() < 15) { //Blue Rings
@@ -40,7 +40,7 @@ const int SWING_SPEED = 90;
 // Constants
 ///
 void default_constants() {
-  chassis.pid_heading_constants_set(11, 0, 20);
+  chassis.pid_heading_constants_set(10, 0, 20);
   chassis.pid_drive_constants_set(11, 0, 100);
   chassis.pid_turn_constants_set(3, 0.05, 20, 15);
   chassis.pid_swing_constants_set(6, 0, 65);
@@ -57,30 +57,37 @@ void default_constants() {
 }
 
 void red_right_rush() {
-  //line up with line of tabs, brake calling me
+  //line up with line of tabs
   arm.move_relative(350, 100);
-  REV(32.5, 110);
-  turn(-29.2, 110);
-  REV(15, 110);
-  mogoClamp.set_value(true);
-  pros::delay(100);
-  turn(10, 100);
-  intake.move_voltage(-12000);
-  pros::delay(500);
-  FWD(15, 110);
-  pros::delay(150);
-  REV(5, 100);
-  intake.move_voltage(12000);
-  pros::delay(500);
-  mogoClamp.set_value(false);
-  REV(6, 110);
-  FWD(6, 110);
-  FWD(7.5, 110);
-  turn(-90, 100);  
+  REV(32.5, 150);
+  turn(-29.4, 150);
   REV(16, 110);
   mogoClamp.set_value(true);
   pros::delay(100);
-  turn(47, 100);
+  turn(13, 110);
+  intake.move_voltage(-12000);
+  pros::delay(150);
+  FWD(15, 110);
+  pros::delay(700);
+  mogoClamp.set_value(false);
+  REV(8, 100);
+  FWD(8, 100);
+  pros::delay(200);
+  
+  turn(-97, 100);
+  REV(23, 100);
+  mogoClamp.set_value(true);
+  pros::delay(100);
+  arm.move_relative(50, 100);
+  turn(51, 100);
+  intakeRelease.set_value(true);
+  FWD(26.5, 100);
+  pros::delay(100);
+  intakeRelease.set_value(false);
+  pros::delay(200);
+  REV(10, 100);
+  //intake.move_voltage(0);
+
 }
 
 void red_right_win_point() {
@@ -211,63 +218,65 @@ void blue_left_win_point() {
 void skills() {
   //alliance stake
   basket.set_value(true);
-  trapdoor.set_value(true);
+  trapdoor.set_value(false);
   pros::delay(100);
   arm.move_relative(770, 100);
   pros::delay(1000);
   FWD(10, 100);
-  arm.move_relative(-500, 100);
+  arm.move_relative(-600, 100);
   pros::delay(100);
-  REV(9, 100);
+  REV(10, 100);
   //1st goal
   turn(80, 100);
-  REV(18, 80);
+  REV(20, 70);
   mogoClamp.set_value(true);
-  turn(195, 100);
+  turn(193, 100);
+  basket.set_value(false);
   intake.move_voltage(-12000);
-  FWD(22, 75);
-  turn(230, 100);
-  FWD(42, 75);
-  turn(20, 100);
-  FWD(24, 75);
-  turn(0, 100);
-  FWD(23, 75);
+  FWD(22, 100);
+  turn(229, 100);
+  FWD(42, 100);
+  REV(5, 100);
+  turn(18.7, 100);
+  FWD(24, 100);
+  turn(-4.9, 100);
+  FWD(23, 100);
   pros::delay(300);
-  FWD(8, 75);
+  FWD(10, 100);
   pros::delay(700);
-  REV(15, 75);
-  turn(-62, 100);
-  pros::delay(300);
-  FWD(11, 75);
+  REV(15, 100);
+  turn(-64, 100);
+  pros::delay(100);
+  FWD(13, 100);
   REV(12, 100);
-  turn(138, 100);
+  turn(136, 100);
   REV(17, 100);
   mogoClamp.set_value(false);
-  FWD(6, 75);
-  REV(10, 100);
-  FWD(10, 75);
+  FWD(6, 100);
+  REV(15, 100);
+  FWD(12, 100);
   //2nd goal
   turn(268, 100);
-  REV(73,70);
+  REV(76,80);
   mogoClamp.set_value(true);
-  basket.set_value(false);
   turn(166, 100);
-  FWD(22, 75);
-  turn(122, 100);
-  FWD(42, 75);
+  FWD(21, 100);
+  turn(131, 100);
+  FWD(41, 100);
+  REV(5, 100);
   turn(-15, 100);
-  FWD(24.5, 75);
-  turn(0, 100);
-  FWD(28, 75);
-  pros::delay(300);
-  FWD(14.5, 75);
-  pros::delay(300);
-  REV(18, 80);
-  turn(55, 100);
-  pros::delay(300);
-  FWD(13, 75);
+  FWD(24.5, 100);
+  turn(-4.5, 100);
+  FWD(24, 100);
   pros::delay(100);
-  REV(13, 75);
+  FWD(13, 100);
+  pros::delay(100);
+  REV(25, 100);
+  turn(56, 100);
+  pros::delay(300);
+  FWD(11, 100);
+  pros::delay(100);
+  REV(13, 100);
   turn(-145, 100);
   REV(20, 100);
   mogoClamp.set_value(false);
@@ -276,16 +285,14 @@ void skills() {
   FWD(8, 100);
   REV(15, 100);
   FWD(15, 100);
+
   //3rd goal
   turn(-165, 100);
-  FWD(88, 100);
-  basket.set_value(true);
+  FWD(87, 100);
   turn(-140, 100);
-  FWD(33, 100);
+  FWD(28, 100);
   turn(-251, 100);
   FWD(60, 100);
-  REV(15, 100);
-  FWD(20, 100);
   REV(20, 100);
   //4th goal
   turn( -90, 100);
@@ -299,9 +306,8 @@ void skills() {
   pros::delay(100);
   arm.move_relative(770, 100);
   sweepArm.set_value(true);
-  FWD(55, 100);
+  FWD(55, 85);
   REV(10, 100);
-//this code sucks and i hate this i just want to rebuild and qualify for worlds 
 
 }
 
