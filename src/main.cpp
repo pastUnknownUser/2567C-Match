@@ -1,4 +1,5 @@
 #include "main.h"
+#include "EZ-Template/auton.hpp"
 #include "EZ-Template/auton_selector.hpp"
 #include "EZ-Template/util.hpp"
 #include "autons.hpp"
@@ -51,8 +52,12 @@ void initialize() {
       Auton("red right wp", red_right_win_point),
       Auton("red left wp", red_left_win_point),
       Auton("blue right wp", blue_right_win_point),
+      Auton("blue left rush", blue_left_rush),
       Auton("blue left wp", blue_left_win_point),
       Auton("SKILLS", skills),
+      Auton("red left four", red_left_four),
+      Auton("blue right four", blue_right_four),
+    
      
   });
 

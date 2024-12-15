@@ -70,29 +70,31 @@ void red_right_rush() {
   FWD(15, 110);
   pros::delay(700);
   mogoClamp.set_value(false);
+  intake.move_voltage(12000);
   REV(8, 100);
   FWD(8, 100);
   pros::delay(200);
-  
   turn(-97, 100);
   REV(23, 100);
   mogoClamp.set_value(true);
+  intake.move_velocity(-12000);
   pros::delay(100);
   arm.move_relative(50, 100);
   turn(51, 100);
   intakeRelease.set_value(true);
-  FWD(26.5, 100);
-  pros::delay(100);
+  FWD(24, 100);
   intakeRelease.set_value(false);
-  pros::delay(200);
   REV(10, 100);
+  pros::delay(150);
+  turn(130, 100);
+  FWD(18, 60);
   //intake.move_voltage(0);
 
 }
 
 void red_right_win_point() {
   
-  trapdoor.set_value(true);
+  trapdoor.set_value(false);
   pros::delay(100);
   arm.move_relative(770, 100);
   basket.set_value(true);
@@ -120,98 +122,161 @@ void red_right_win_point() {
 void red_left_win_point() {
   //pros::Task heading(live_heading);
 
-  trapdoor.set_value(true);
+  trapdoor.set_value(false);
   pros::delay(100);
-  arm.move_relative(770, 100);
+  arm.move_relative(770, 127);
   basket.set_value(true);
-  pros::delay(1000);
-  FWD(11.5, 100);
-  arm.move_relative(-500, 100);
+  pros::delay(600);
+  FWD(11, 127);
+  arm.move_relative(-500, 127);
   pros::delay(500);
   REV(37, 65);
   mogoClamp.set_value(true);
-  turn(125, 100);
+  turn(120, 127);
   intake.move_voltage(-12000);
-  FWD(23, 100);
-  turn(212, 100);
-  FWD(15.5, 100);
-  pros::delay( 500);
-  REV(15.5, 100);
-  turn(191, 100);
-  FWD(16.5, 100);
-  pros::delay( 500);
-  REV(16.5, 100);
-  intakeRelease.set_value(true);
-  turn(323, 100);
-  FWD(44, 100);
-  pros::delay(500);
-  intakeRelease.set_value(false);
-  REV(10, 100);
-  pros::delay(500);
-  turn(245, 100);
-  FWD(19, 100);
+  FWD(23, 127);
+  turn(219.5, 127);
+  FWD(16, 127);
+  pros::delay( 400);
+  REV(16, 127);
+  turn(190, 127);
+  FWD(16.5, 127);
+  pros::delay( 200);
+  REV(18, 127);
+  turn(295, 127);
+  basket.set_value(false);
+  FWD(38, 900);
+
+}
+
+void red_left_four() {
+  arm.move_relative(300, 100);
+  REV(22.3, 127);
+  mogoClamp.set_value(true);
+  intake.move_velocity(-12000);
+  pros::delay(5);
+  turn(126.5, 127);
+  FWD(24, 127);
+  REV(5.5, 127);
+  turn(98, 127);
+  FWD(12.5, 127);
+  REV(10, 127);
+  turn(12.5, 127);
+  FWD(20.8, 127);
+  REV(5, 127);
+  turn(240, 127);
+  FWD(39.5, 127);
 
 }
 
 void blue_right_win_point() {
   
-  trapdoor.set_value(true);
+  trapdoor.set_value(false);
   pros::delay(100);
-  arm.move_relative(770, 100);
+  arm.move_relative(770, 127);
   basket.set_value(true);
-  pros::delay(1000);
-  FWD(11.5, 100);
-  arm.move_relative(-500, 100);
+  pros::delay(600);
+  FWD(11, 127);
+  arm.move_relative(-500, 127);
   pros::delay(500);
   REV(37, 65);
   mogoClamp.set_value(true);
-  turn(-125, 100);
+  turn(-120, 127);
   intake.move_voltage(-12000);
-  FWD(23, 100);
-  turn(-212, 100);
-  FWD(15.5, 100);
-  pros::delay( 500);
-  REV(15.5, 100);
-  turn(-191, 100);
-  FWD(16.5, 100);
-  pros::delay( 500);
-  REV(16.5, 100);
-  intakeRelease.set_value(true);
-  turn(-323, 100);
-  FWD(44, 100);
-  pros::delay(500);
-  intakeRelease.set_value(false);
-  REV(10, 100);
-  pros::delay(500);
-  turn(-245, 100);
-  FWD(19, 100);
+  FWD(23, 127);
+  turn(-219.5, 127);
+  FWD(16, 127);
+  pros::delay( 400);
+  REV(16, 127);
+  turn(-190, 127);
+  FWD(16.5, 127);
+  pros::delay( 200);
+  REV(18, 127);
+  turn(-295, 127);
+  basket.set_value(false);
+  FWD(38, 900);
   
+}
+void blue_left_rush() {
+
+  arm.move_relative(350, 100);
+  REV(32.5, 150);
+  turn(29.4, 150);
+  REV(16.3, 110);
+  mogoClamp.set_value(true);
+  pros::delay(100);
+  turn(-13, 127);
+  intake.move_voltage(-12000);
+  pros::delay(150);
+  FWD(15, 127);
+  pros::delay(700);
+  mogoClamp.set_value(false);
+  intake.move_voltage(12000);
+  REV(8, 127);
+  FWD(8, 127);
+  pros::delay(200);
+  turn(94.4, 127);
+  REV(23, 127);
+  mogoClamp.set_value(true);
+  intake.move_velocity(-12000);
+  pros::delay(100);
+  arm.move_relative(50, 100);
+  turn(-49, 127);
+  intakeRelease.set_value(true);
+  FWD(25.2, 127);
+  intakeRelease.set_value(false);
+  REV(10, 127);
+  pros::delay(250);
+  turn(-130, 127);
+  FWD(16, 65);
+
 }
 
 void blue_left_win_point() {
 
-  trapdoor.set_value(true);
+  trapdoor.set_value(false);
   pros::delay(100);
   arm.move_relative(770, 100);
   basket.set_value(true);
   pros::delay(1000);
-  FWD(11, 90);
+  FWD(10.1, 90);
   arm.move_relative(-500, 100);
   pros::delay(500);
-  REV(37, 90);
+  REV(36.5, 80);
   arm.move_relative(-440, 100);
   mogoClamp.set_value(true);
-  turn(125, 100);
+  turn(125, 127);
   intake.move_voltage(-12000);
   FWD(24.5, 90);
   arm.move_relative(500, 100);
-  turn(-36, 100);
+  turn(-36, 127);
   intakeRelease.set_value(true);
   FWD(44, 90);
   intakeRelease.set_value(false);
-  REV(20, 90);
-  turn(-95, 100);
-  FWD(11, 90);
+  REV(20, 127);
+  turn(-95, 127);
+  basket.set_value(false);
+  FWD(16, 90);
+
+}
+void blue_right_four() {
+
+  arm.move_relative(300, 100);
+  REV(22.3, 127);
+  mogoClamp.set_value(true);
+  intake.move_velocity(-12000);
+  pros::delay(5);
+  turn(-126.5, 127);
+  FWD(24, 127);
+  REV(5.5, 127);
+  turn(-98, 127);
+  FWD(12.5, 127);
+  REV(10, 127);
+  turn(-12.5, 127);
+  FWD(20.8, 127);
+  REV(5, 127);
+  turn(-240, 127);
+  FWD(39.5, 127);
 
 }
 
@@ -221,84 +286,74 @@ void skills() {
   trapdoor.set_value(false);
   pros::delay(100);
   arm.move_relative(770, 100);
-  pros::delay(1000);
+  pros::delay(800);
   FWD(10, 100);
-  arm.move_relative(-600, 100);
+  arm.move_relative(-530, 100);
   pros::delay(100);
-  REV(10, 100);
+  REV(11, 100);
   //1st goal
-  turn(80, 100);
-  REV(20, 70);
+  turn(79.5, 100);
+  REV(20.2, 65);
   mogoClamp.set_value(true);
-  turn(193, 100);
+  turn(191, 100);
   basket.set_value(false);
   intake.move_voltage(-12000);
   FWD(22, 100);
-  turn(229, 100);
-  FWD(42, 100);
+  turn(231.5, 100);
+  FWD(41.5, 100);
   REV(5, 100);
-  turn(18.7, 100);
-  FWD(24, 100);
-  turn(-4.9, 100);
+  turn(17.7, 100);
   FWD(23, 100);
-  pros::delay(300);
-  FWD(10, 100);
-  pros::delay(700);
-  REV(15, 100);
-  turn(-64, 100);
+  turn(-5, 100);
+  FWD(36, 80);
+  pros::delay(500);
+  REV(18, 100);
+  turn(-61, 100);
   pros::delay(100);
   FWD(13, 100);
   REV(12, 100);
   turn(136, 100);
-  REV(17, 100);
+  REV(19.6, 100);
   mogoClamp.set_value(false);
-  FWD(6, 100);
-  REV(15, 100);
-  FWD(12, 100);
+  FWD(10, 100);
   //2nd goal
-  turn(268, 100);
-  REV(76,80);
+  turn(267, 100);
+  REV(75.5,75);
   mogoClamp.set_value(true);
-  turn(166, 100);
+  turn(170, 100);
   FWD(21, 100);
-  turn(131, 100);
-  FWD(41, 100);
+  turn(129, 100);
+  FWD(38, 100);
   REV(5, 100);
-  turn(-15, 100);
-  FWD(24.5, 100);
-  turn(-4.5, 100);
-  FWD(24, 100);
+  turn(-8, 100);
+  FWD(23, 100);
+  turn(-2.5, 100);
+  FWD(35, 80);
   pros::delay(100);
-  FWD(13, 100);
-  pros::delay(100);
-  REV(25, 100);
-  turn(56, 100);
+  REV(23, 100);
+  turn(53.2, 100);
   pros::delay(300);
-  FWD(11, 100);
+  FWD(13, 100);
   pros::delay(100);
   REV(13, 100);
   turn(-145, 100);
-  REV(20, 100);
+  REV(26.3, 100);
   mogoClamp.set_value(false);
-  pros::delay(100);
   intake.move_voltage(12000);
-  FWD(8, 100);
-  REV(15, 100);
   FWD(15, 100);
-
   //3rd goal
-  turn(-165, 100);
+  turn(-168, 100);
   FWD(87, 100);
   turn(-140, 100);
   FWD(28, 100);
   turn(-251, 100);
-  FWD(60, 100);
+  FWD(53, 100);
   REV(20, 100);
   //4th goal
   turn( -90, 100);
-  FWD(50, 100);
+  FWD(45, 100);
   turn(-115, 100);
-  FWD(70, 100);
+  FWD(63, 100);
   REV(25, 100);
   //hang
   turn(34, 100);
