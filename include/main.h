@@ -46,7 +46,6 @@
 // More includes here...
 #include "autons.hpp"// IWYU pragma: keep
 #include "subsystems.hpp"// IWYU pragma: keep
-#include "global.h"
 
 
 /**

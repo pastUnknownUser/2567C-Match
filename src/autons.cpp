@@ -1,5 +1,4 @@
 #include "autons.hpp"
-#include "global.h"
 #include "liblvgl/core/lv_obj_class.h" // IWYU pragma: keep
 #include "main.h" // IWYU pragma: keep
 #include "pros/rtos.hpp"
