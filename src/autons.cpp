@@ -9,17 +9,49 @@
 // https://ez-robotics.github.io/EZ-Template/
 /////
 
-void FWD(float distance, int speed) {
+void Forward(float distance, int speed) {
   chassis.pid_drive_set(distance, speed, true);
   chassis.pid_wait();
 }
-void REV(float distance, int speed) {
+
+void Reverse(float distance, int speed) {
   chassis.pid_drive_set(-distance, speed, true);
   chassis.pid_wait();
 }
-void turn(float heading, int speed) {
-  chassis.pid_turn_set(heading, speed, false);
+
+void FWDUntil(float distance, int speed, float untilDistance, int untilSpeed) {
+  chassis.pid_drive_set(distance, speed, true);
+  chassis.pid_wait_until(untilDistance);
+  chassis.pid_speed_max_set(untilSpeed);
   chassis.pid_wait();
+}
+
+void revUntil(float distance, int speed, float untilDistance, int untilSpeed) {
+  chassis.pid_drive_set(-distance, speed, true);
+  chassis.pid_wait_until(-untilDistance);
+  chassis.pid_speed_max_set(untilSpeed);
+  chassis.pid_wait();
+}
+
+void turn(float heading, int speed) {
+  chassis.pid_turn_set(heading, speed, true);
+  chassis.pid_wait();
+}
+
+void turnUntil(float heading, int speed, float untilAngle, int untilSpeed) {
+  chassis.pid_turn_set(heading, speed, true);
+  chassis.pid_wait_until(untilAngle);
+  chassis.pid_speed_max_set(untilSpeed);
+  chassis.pid_wait();
+}
+
+void live_heading(void * ignore) {
+
+  while (true) {
+    std::cout << "Heading: " << chassis.drive_imu_get() << std::endl;
+    pros::delay(250);
+  }
+  
 }
 
 void ColorSensor() {
@@ -40,54 +72,73 @@ const int SWING_SPEED = 90;
 // Constants
 ///
 void default_constants() {
-  chassis.pid_heading_constants_set(10, 0, 20);
-  chassis.pid_drive_constants_set(11, 0, 100);
-  chassis.pid_turn_constants_set(3, 0.05, 20, 15);
-  chassis.pid_swing_constants_set(6, 0, 65);
+  // P, I, D, and Start I
+  chassis.pid_drive_constants_set(20.0, 0.0, 100.0);         // Fwd/rev constants, used for odom and non odom motions
+  chassis.pid_heading_constants_set(11.0, 0.0, 20.0);        // Holds the robot straight while going forward without odom
+  chassis.pid_turn_constants_set(3.0, 0.05, 20.0, 15.0);     // Turn in place constants
+  chassis.pid_swing_constants_set(6.0, 0.0, 65.0);           // Swing constants
+  chassis.pid_odom_angular_constants_set(6.5, 0.0, 52.5);    // Angular control for odom motions
+  chassis.pid_odom_boomerang_constants_set(5.8, 0.0, 32.5);  // Angular control for boomerang motions
 
-  chassis.pid_turn_exit_condition_set(80_ms, 3_deg, 250_ms, 7_deg, 500_ms, 500_ms);
-  chassis.pid_swing_exit_condition_set(80_ms, 3_deg, 250_ms, 7_deg, 500_ms, 500_ms);
-  chassis.pid_drive_exit_condition_set(80_ms, 1_in, 250_ms, 3_in, 500_ms, 500_ms);
-
+  // Exit conditions
+  chassis.pid_turn_exit_condition_set(90_ms, 3_deg, 250_ms, 7_deg, 500_ms, 500_ms);
+  chassis.pid_swing_exit_condition_set(90_ms, 3_deg, 250_ms, 7_deg, 500_ms, 500_ms);
+  chassis.pid_drive_exit_condition_set(90_ms, 1_in, 250_ms, 3_in, 500_ms, 500_ms);
+  chassis.pid_odom_turn_exit_condition_set(90_ms, 3_deg, 250_ms, 7_deg, 500_ms, 750_ms);
+  chassis.pid_odom_drive_exit_condition_set(90_ms, 1_in, 250_ms, 3_in, 500_ms, 750_ms);
   chassis.pid_turn_chain_constant_set(3_deg);
   chassis.pid_swing_chain_constant_set(5_deg);
   chassis.pid_drive_chain_constant_set(3_in);
 
-  chassis.slew_drive_constants_set(7_in, 80);
+  // Slew constants
+  chassis.slew_turn_constants_set(3_deg, 70);
+  chassis.slew_drive_constants_set(3_in, 70);
+  chassis.slew_swing_constants_set(3_in, 80);
+
+  // The amount that turns are prioritized over driving in odom motions
+  // - if you have tracking wheels, you can run this higher.  1.0 is the max
+  chassis.odom_turn_bias_set(0.9);
+
+  chassis.odom_look_ahead_set(7_in);           // This is how far ahead in the path the robot looks at
+  chassis.odom_boomerang_distance_set(16_in);  // This sets the maximum distance away from target that the carrot point can be
+  chassis.odom_boomerang_dlead_set(0.625);     // This handles how aggressive the end of boomerang motions are
+
+  chassis.pid_angle_behavior_set(ez::shortest);  // Changes the default behavior for turning, this defaults it to the shortest path there
 }
+
 
 void red_right_rush() {
   //line up with line of tabs
   arm.move_relative(350, 100);
-  REV(32.5, 150);
+  Reverse(32.5, 150);
   turn(-29.4, 150);
-  REV(16, 110);
+  Reverse(16, 110);
   mogoClamp.set_value(true);
   pros::delay(100);
   turn(13, 110);
   intake.move_voltage(-12000);
   pros::delay(150);
-  FWD(15, 110);
+  Forward(15, 110);
   pros::delay(700);
   mogoClamp.set_value(false);
   intake.move_voltage(12000);
-  REV(8, 100);
-  FWD(8, 100);
+  Reverse(8, 100);
+  Forward(8, 100);
   pros::delay(200);
   turn(-97, 100);
-  REV(23, 100);
+  Reverse(23, 100);
   mogoClamp.set_value(true);
   intake.move_velocity(-12000);
   pros::delay(100);
   arm.move_relative(50, 100);
   turn(51, 100);
   intakeRelease.set_value(true);
-  FWD(24, 100);
+  Forward(24, 100);
   intakeRelease.set_value(false);
-  REV(10, 100);
+  Reverse(10, 100);
   pros::delay(150);
   turn(130, 100);
-  FWD(18, 60);
+  Forward(18, 60);
   //intake.move_voltage(0);
 
 }
@@ -99,23 +150,23 @@ void red_right_win_point() {
   arm.move_relative(770, 100);
   basket.set_value(true);
   pros::delay(1000);
-  FWD(11, 90);
+  Forward(11, 90);
   arm.move_relative(-500, 100);
   pros::delay(500);
-  REV(37, 90);
+  Reverse(37, 90);
   arm.move_relative(-440, 100);
   mogoClamp.set_value(true);
   turn(-125, 100);
   intake.move_voltage(-12000);
-  FWD(24.5, 90);
+  Forward(24.5, 90);
   arm.move_relative(500, 100);
   turn(36, 100);
   intakeRelease.set_value(true);
-  FWD(44,90 );
+  Forward(44,90 );
   intakeRelease.set_value(false);
-  REV(20, 90);
+  Reverse(20, 90);
   turn(95, 100);
-  FWD(11, 90);
+  Forward(11, 90);
 
 }
 
@@ -127,45 +178,45 @@ void red_left_win_point() {
   arm.move_relative(770, 127);
   basket.set_value(true);
   pros::delay(600);
-  FWD(11, 127);
+  Forward(11, 127);
   arm.move_relative(-500, 127);
   pros::delay(500);
-  REV(37, 65);
+  Reverse(37, 65);
   mogoClamp.set_value(true);
   turn(120, 127);
   intake.move_voltage(-12000);
-  FWD(23, 127);
+  Forward(23, 127);
   turn(219.5, 127);
-  FWD(16, 127);
+  Forward(16, 127);
   pros::delay( 400);
-  REV(16, 127);
+  Reverse(16, 127);
   turn(190, 127);
-  FWD(16.5, 127);
+  Forward(16.5, 127);
   pros::delay( 200);
-  REV(18, 127);
+  Reverse(18, 127);
   turn(295, 127);
   basket.set_value(false);
-  FWD(38, 900);
+  Forward(38, 900);
 
 }
 
 void red_left_four() {
   arm.move_relative(300, 100);
-  REV(22.3, 127);
+  Reverse(22.3, 127);
   mogoClamp.set_value(true);
   intake.move_velocity(-12000);
   pros::delay(5);
   turn(126.5, 127);
-  FWD(24, 127);
-  REV(5.5, 127);
+  Forward(24, 127);
+  Reverse(5.5, 127);
   turn(98, 127);
-  FWD(12.5, 127);
-  REV(10, 127);
+  Forward(12.5, 127);
+  Reverse(10, 127);
   turn(12.5, 127);
-  FWD(20.8, 127);
-  REV(5, 127);
+  Forward(20.8, 127);
+  Reverse(5, 127);
   turn(240, 127);
-  FWD(39.5, 127);
+  Forward(39.5, 127);
 
 }
 
@@ -176,59 +227,59 @@ void blue_right_win_point() {
   arm.move_relative(770, 127);
   basket.set_value(true);
   pros::delay(600);
-  FWD(11, 127);
+  Forward(11, 127);
   arm.move_relative(-500, 127);
   pros::delay(500);
-  REV(37, 65);
+  Reverse(37, 65);
   mogoClamp.set_value(true);
   turn(-120, 127);
   intake.move_voltage(-12000);
-  FWD(23, 127);
+  Forward(23, 127);
   turn(-219.5, 127);
-  FWD(16, 127);
+  Forward(16, 127);
   pros::delay( 400);
-  REV(16, 127);
+  Reverse(16, 127);
   turn(-190, 127);
-  FWD(16.5, 127);
+  Forward(16.5, 127);
   pros::delay( 200);
-  REV(18, 127);
+  Reverse(18, 127);
   turn(-295, 127);
   basket.set_value(false);
-  FWD(38, 900);
+  Forward(38, 900);
   
 }
 void blue_left_rush() {
 
   arm.move_relative(350, 100);
-  REV(32.5, 150);
+  Reverse(32.5, 150);
   turn(29.4, 150);
-  REV(16.3, 110);
+  Reverse(16.3, 110);
   mogoClamp.set_value(true);
   pros::delay(100);
   turn(-13, 127);
   intake.move_voltage(-12000);
   pros::delay(150);
-  FWD(15, 127);
+  Forward(15, 127);
   pros::delay(700);
   mogoClamp.set_value(false);
   intake.move_voltage(12000);
-  REV(8, 127);
-  FWD(8, 127);
+  Reverse(8, 127);
+  Forward(8, 127);
   pros::delay(200);
   turn(94.4, 127);
-  REV(23, 127);
+  Reverse(23, 127);
   mogoClamp.set_value(true);
   intake.move_velocity(-12000);
   pros::delay(100);
   arm.move_relative(50, 100);
   turn(-49, 127);
   intakeRelease.set_value(true);
-  FWD(25.2, 127);
+  Forward(25.2, 127);
   intakeRelease.set_value(false);
-  REV(10, 127);
+  Reverse(10, 127);
   pros::delay(250);
   turn(-130, 127);
-  FWD(16, 65);
+  Forward(16, 65);
 
 }
 
@@ -239,44 +290,44 @@ void blue_left_win_point() {
   arm.move_relative(770, 100);
   basket.set_value(true);
   pros::delay(1000);
-  FWD(10.1, 90);
+  Forward(10.1, 90);
   arm.move_relative(-500, 100);
   pros::delay(500);
-  REV(36.5, 80);
+  Reverse(36.5, 80);
   arm.move_relative(-440, 100);
   mogoClamp.set_value(true);
   turn(125, 127);
   intake.move_voltage(-12000);
-  FWD(24.5, 90);
+  Forward(24.5, 90);
   arm.move_relative(500, 100);
   turn(-36, 127);
   intakeRelease.set_value(true);
-  FWD(44, 90);
+  Forward(44, 90);
   intakeRelease.set_value(false);
-  REV(20, 127);
+  Reverse(20, 127);
   turn(-95, 127);
   basket.set_value(false);
-  FWD(16, 90);
+  Forward(16, 90);
 
 }
 void blue_right_four() {
 
   arm.move_relative(300, 100);
-  REV(22.3, 127);
+  Reverse(22.3, 127);
   mogoClamp.set_value(true);
   intake.move_velocity(-12000);
   pros::delay(5);
   turn(-126.5, 127);
-  FWD(24, 127);
-  REV(5.5, 127);
+  Forward(24, 127);
+  Reverse(5.5, 127);
   turn(-98, 127);
-  FWD(12.5, 127);
-  REV(10, 127);
+  Forward(12.5, 127);
+  Reverse(10, 127);
   turn(-12.5, 127);
-  FWD(20.8, 127);
-  REV(5, 127);
+  Forward(20.8, 127);
+  Reverse(5, 127);
   turn(-240, 127);
-  FWD(39.5, 127);
+  Forward(39.5, 127);
 
 }
 
@@ -287,82 +338,82 @@ void skills() {
   pros::delay(100);
   arm.move_relative(770, 100);
   pros::delay(800);
-  FWD(10, 100);
+  Forward(10, 100);
   arm.move_relative(-530, 100);
   pros::delay(100);
-  REV(11, 100);
+  Reverse(11, 100);
   //1st goal
   turn(79.5, 100);
-  REV(20.2, 65);
+  Reverse(20.2, 65);
   mogoClamp.set_value(true);
   turn(191, 100);
   basket.set_value(false);
   intake.move_voltage(-12000);
-  FWD(22, 100);
+  Forward(22, 100);
   turn(231.5, 100);
-  FWD(41.5, 100);
-  REV(5, 100);
+  Forward(41.5, 100);
+  Reverse(5, 100);
   turn(17.7, 100);
-  FWD(23, 100);
+  Forward(23, 100);
   turn(-5, 100);
-  FWD(36, 80);
+  Forward(36, 80);
   pros::delay(500);
-  REV(18, 100);
+  Reverse(18, 100);
   turn(-61, 100);
   pros::delay(100);
-  FWD(13, 100);
-  REV(12, 100);
+  Forward(13, 100);
+  Reverse(12, 100);
   turn(136, 100);
-  REV(19.6, 100);
+  Reverse(19.6, 100);
   mogoClamp.set_value(false);
-  FWD(10, 100);
+  Forward(10, 100);
   //2nd goal
   turn(267, 100);
-  REV(75.5,75);
+  Reverse(75.5,75);
   mogoClamp.set_value(true);
   turn(170, 100);
-  FWD(21, 100);
+  Forward(21, 100);
   turn(129, 100);
-  FWD(38, 100);
-  REV(5, 100);
+  Forward(38, 100);
+  Reverse(5, 100);
   turn(-8, 100);
-  FWD(23, 100);
+  Forward(23, 100);
   turn(-2.5, 100);
-  FWD(35, 80);
+  Forward(35, 80);
   pros::delay(100);
-  REV(23, 100);
+  Reverse(23, 100);
   turn(53.2, 100);
   pros::delay(300);
-  FWD(13, 100);
+  Forward(13, 100);
   pros::delay(100);
-  REV(13, 100);
+  Reverse(13, 100);
   turn(-145, 100);
-  REV(26.3, 100);
+  Reverse(26.3, 100);
   mogoClamp.set_value(false);
   intake.move_voltage(12000);
-  FWD(15, 100);
+  Forward(15, 100);
   //3rd goal
   turn(-168, 100);
-  FWD(87, 100);
+  Forward(87, 100);
   turn(-140, 100);
-  FWD(28, 100);
+  Forward(28, 100);
   turn(-251, 100);
-  FWD(53, 100);
-  REV(20, 100);
+  Forward(53, 100);
+  Reverse(20, 100);
   //4th goal
   turn( -90, 100);
-  FWD(45, 100);
+  Forward(45, 100);
   turn(-115, 100);
-  FWD(63, 100);
-  REV(25, 100);
+  Forward(63, 100);
+  Reverse(25, 100);
   //hang
   turn(34, 100);
   basket.set_value(false);
   pros::delay(100);
   arm.move_relative(770, 100);
   sweepArm.set_value(true);
-  FWD(55, 85);
-  REV(10, 100);
+  Forward(55, 85);
+  Reverse(10, 100);
 
 }
 

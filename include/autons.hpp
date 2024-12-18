@@ -4,8 +4,8 @@
 
 extern Drive chassis;
 
-void forward();
-void reverse();
+void Forward();
+void Reverse();
 void turn();
 void ColorSensor();
 void live_heading();
